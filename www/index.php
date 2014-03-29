@@ -1,5 +1,5 @@
 <?php
-$mysql = new mysqli(getenv("OPENSHIFT_MYSQL_DB_HOST"), getenv("OPENSHIFT_MYSQL_DB_USERNAME"), getenv("OPENSHIFT_MYSQL_DB_PASSWORD"), getenv("OPENSHIFT_APP_NAME"));
+$mysql = new mysqli("localhost", "root", "root", "speedtest");
 
 $results = $mysql->query("SELECT * FROM speedtest ORDER BY `ts` DESC");
 date_default_timezone_set("UTC");

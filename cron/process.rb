@@ -8,6 +8,6 @@ ul = gets[/Upload: (\d*.+\d*) Mbit\/s/, 1]
 
 puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}"
 
-uri = URI('http://apps.yihangho.com/speed-test/api/submit.php')
+uri = URI('http://www.example.com/api/submit.php')
 res = Net::HTTP.post_form(uri, timestamp: ts, ping: ping, dl: dl, ul: ul)
 puts res.body

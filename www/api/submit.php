@@ -13,7 +13,7 @@ if ($_SERVER["REQUEST_METHOD"] != "POST") {
 	die();
 }
 
-$mysql = new mysqli(getenv("OPENSHIFT_MYSQL_DB_HOST"), getenv("OPENSHIFT_MYSQL_DB_USERNAME"), getenv("OPENSHIFT_MYSQL_DB_PASSWORD"), getenv("OPENSHIFT_APP_NAME"));
+$mysql = new mysqli("localhost", "root", "root", "speedtest");
 
 // Extract and sanitize input values
 $timestamp = $mysql->escape_string(intval($_POST["timestamp"]));
