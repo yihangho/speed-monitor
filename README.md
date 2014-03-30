@@ -10,5 +10,5 @@ The recommended web server is the usual LAMP server. Create a MySQL table as des
 
 1. `www/index.php`:
     - [line 9](https://github.com/yihangho/speed-monitor/blob/master/www/index.php#L9)
-2 `www/commons/mysql.php`:
+2. `www/commons/mysql.php`:
     - [line 2](https://github.com/yihangho/speed-monitor/blob/master/www/commons/mysql.php#L2)
