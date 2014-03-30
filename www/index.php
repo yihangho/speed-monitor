@@ -1,5 +1,5 @@
 <?php
-$mysql = new mysqli("localhost", "root", "root", "speedtest");
+require_once("commons/mysql.php");
 
 $results = $mysql->query("SELECT * FROM speedtest ORDER BY `ts` DESC");
 date_default_timezone_set("UTC");

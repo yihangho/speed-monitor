@@ -9,7 +9,6 @@ The machine taking care of the cron job must be connected to the network that yo
 The recommended web server is the usual LAMP server. Create a MySQL table as described in `www/schema.sql`. Also, make necessary changes to the following files:
 
 1. `www/index.php`:
-    - [line 2](https://github.com/yihangho/speed-monitor/blob/master/www/index.php#L2)
     - [line 9](https://github.com/yihangho/speed-monitor/blob/master/www/index.php#L9)
-2. `www/api/submit.php`:
-    - [line 16](https://github.com/yihangho/speed-monitor/blob/master/www/api/submit.php#L16)
+2 `www/commons/mysql.php`:
+    - [line 2](https://github.com/yihangho/speed-monitor/blob/master/www/commons/mysql.php#L2)

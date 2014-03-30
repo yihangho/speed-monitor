@@ -7,13 +7,13 @@ dl - float
 ul - float
 */
 
+require_once("../commons/mysql.php");
+
 // Make sure that request is supported, that is, it must a POST request.
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
 	echo "Request method unsupported. Please send a POST request instead.";
 	die();
 }
-
-$mysql = new mysqli("localhost", "root", "root", "speedtest");
 
 // Extract and sanitize input values
 $timestamp = $mysql->escape_string(intval($_POST["timestamp"]));
