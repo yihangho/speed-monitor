@@ -1,5 +1,6 @@
 <?php
 require_once("commons/mysql.php");
+require_once("commons/config.php");
 
 $results = $mysql->query("SELECT * FROM speedtest ORDER BY `ts` DESC");
 date_default_timezone_set("UTC");
@@ -59,7 +60,7 @@ foreach ($results_arr as $i => $row) {
 			</thead>
 			<tbody>
 				<?php foreach($results_arr as $row): ?>
-					<tr<?php if ($row["dl"] < 4):?> class="text-danger"<?php endif; ?>>
+					<tr<?php if ($row["dl"] < LOW_SPEED_CUTOFF):?> class="text-danger"<?php endif; ?>>
 						<td><?php echo $row["ts"]; ?></td>
 						<td><?php echo $row["ping"]; ?></td>
 						<td><?php echo $row["dl"]; ?></td>
