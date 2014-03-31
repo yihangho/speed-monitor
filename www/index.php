@@ -2,7 +2,26 @@
 require_once("commons/mysql.php");
 require_once("commons/config.php");
 
-$results = $mysql->query("SELECT * FROM speedtest ORDER BY `ts` DESC");
+// Get total number of rows to prepare for pagination
+$results = $mysql->query("SELECT COUNT(*) FROM speedtest");
+$t = $results->fetch_all();
+$num_records = $t[0][0];
+$num_pages = ceil($num_records / RESULTS_PER_PAGE);
+
+// Handle pagination
+$current_page = intval($_GET["page"]);
+if ($current_page > $num_pages) {
+	$current_page = $num_pages;
+} else if ($current_page < 1) {
+	$current_page = 1;
+}
+$per_page     = RESULTS_PER_PAGE;
+$first_index  = ($current_page-1) * RESULTS_PER_PAGE;
+
+$results = $mysql->query("SELECT COUNT(*) FROM speedtest");
+$t = $results->fetch_all();
+
+$results = $mysql->query("SELECT * FROM speedtest ORDER BY `ts` DESC LIMIT $first_index, $per_page");
 date_default_timezone_set("UTC");
 $results_arr = $results->fetch_all(MYSQLI_ASSOC);
 foreach ($results_arr as $i => $row) {
@@ -13,7 +32,7 @@ foreach ($results_arr as $i => $row) {
 ?>
 <!DOCTYPE html>
 <html>
-<head>
+	<!-- <?php echo $current_page; ?> -->
 	<meta chatset="utf-8">
 	<title>Internet Speed</title>
 	<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
@@ -69,5 +88,51 @@ foreach ($results_arr as $i => $row) {
 				<?php endforeach; ?>
 			</tbody>
 		</table>
+
+		<?php if ($num_pages > 1): ?>
+			<ul class="pagination">
+				<li<?php if ($current_page == 1): ?> class="disabled"<?php endif; ?>>
+					<?php if ($current_page != 1): ?>
+						<a href="?page=<?php echo $current_page-1; ?>">
+					<?php else: ?>
+						<span>
+					<?php endif; ?>
+						&laquo;
+					<?php if ($current_page != 1): ?>
+						</a>
+					<?php else: ?>
+						</span>
+					<?php endif; ?>
+				</li>
+				<?php for ($i = 1; $i <= $num_pages; $i++): ?>
+				<li<?php if ($i == $current_page): ?> class="active"<?php endif; ?>>
+					<?php if ($i != $current_page): ?>
+						<a href="?page=<?php echo $i; ?>">
+					<?php else: ?>
+						<span>
+					<?php endif;?>
+						<?php echo $i; ?>
+					<?php if ($i != $current_page): ?>
+						</a>
+					<?php else: ?>
+						</span>
+					<?php endif;?>
+				</li>
+				<?php endfor; ?>
+				<li<?php if ($current_page == $num_pages): ?> class="disabled"<?php endif; ?>>
+					<?php if ($current_page != $num_pages): ?>
+						<a href="?page=<?php echo $current_page+1; ?>">
+					<?php else: ?>
+						<span>
+					<?php endif; ?>
+						&raquo;
+					<?php if ($current_page != $num_pages): ?>
+						</a>
+					<?php else: ?>
+						</span>
+					<?php endif; ?>
+				</li>
+			</ul>
+		<?php endif; ?>
 	</div>
 </body>
