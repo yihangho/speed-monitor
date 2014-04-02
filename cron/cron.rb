@@ -1,5 +1,6 @@
 #!/usr/bin/env ruby
 require 'net/http'
+require 'openssl'
 
 ts = Time.now.to_i
 
@@ -11,6 +12,20 @@ key = "123456"
 
 puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}"
 
-uri = URI('http://www.example.com/api/submit.php')
-res = Net::HTTP.post_form(uri, timestamp: ts, ping: ping, dl: dl, ul: ul, key: key)
-puts res.body
+uri = URI('https://www.example.com/speed-test/api/submit.php')
+
+if uri.path.empty?
+  uri.path = "/"
+end
+
+http = Net::HTTP.new(uri.host, uri.port)
+http.use_ssl = (uri.scheme == "https")
+
+begin
+  response = http.request_post(uri.path, "timestamp=#{ts}&ping=#{ping}&dl=#{dl}&ul=#{ul}&key=#{key}")
+  p response
+  puts response.body
+rescue Exception => e
+  puts "Cannot send result to server"
+  puts e.message
+end

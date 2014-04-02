@@ -10,6 +10,12 @@ ul - float
 require_once("../commons/mysql.php");
 require_once("../commons/config.php");
 
+// If API_FORCE_SSL is set to true, reject non-https requests
+if (API_FORCE_SSL && !$_SERVER["HTTPS"]) {
+	echo "Please send this request via HTTPS.";
+	die();
+}
+
 // Make sure that request is supported, that is, it must a POST request.
 if ($_SERVER["REQUEST_METHOD"] != "POST") {
 	echo "Request method unsupported. Please send a POST request instead.";
