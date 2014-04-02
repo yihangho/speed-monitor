@@ -10,9 +10,19 @@ dl = speedtest_result_io.gets[/Download: (\d*.+\d*) Mbit\/s/, 1]
 ul = speedtest_result_io.gets[/Upload: (\d*.+\d*) Mbit\/s/, 1]
 key = "123456"
 
-puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}"
+unless ENV["SPEED_MONITOR_SECRET_KEY"].nil?
+  key = ENV["SPEED_MONITOR_SECRET_KEY"]
+else
+  key = "123456"
+end
 
-uri = URI('https://www.example.com/speed-test/api/submit.php')
+unless ENV["SPEED_MONITOR_URL"].nil?
+  uri = URI(ENV["SPEED_MONITOR_URL"])
+else
+  uri = URI('https://www.example.com/speed-test/api/submit.php')
+end
+
+puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}"
 
 if uri.path.empty?
   uri.path = "/"
