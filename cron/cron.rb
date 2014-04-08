@@ -4,7 +4,13 @@ require 'openssl'
 
 ts = Time.now.to_i
 
-speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple")
+speedtest_result_io =
+  if ENV["SPEED_MONITOR_SERVER_ID"]
+    IO.popen("/usr/local/bin/speedtest-cli --simple --server #{ENV["SPEED"]}")
+  else
+    IO.popen("/usr/local/bin/speedtest-cli --simple")
+  end
+
 ping = speedtest_result_io.gets[/Ping: (\d*.+\d*) ms/, 1]
 dl = speedtest_result_io.gets[/Download: (\d*.+\d*) Mbit\/s/, 1]
 ul = speedtest_result_io.gets[/Upload: (\d*.+\d*) Mbit\/s/, 1]
