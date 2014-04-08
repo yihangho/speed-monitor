@@ -6,7 +6,7 @@ ts = Time.now.to_i
 
 speedtest_result_io =
   if ENV["SPEED_MONITOR_SERVER_ID"]
-    IO.popen("/usr/local/bin/speedtest-cli --simple --server #{ENV["SPEED"]}")
+    IO.popen("/usr/local/bin/speedtest-cli --simple --server #{ENV["SPEED_MONITOR_SERVER_ID"]}")
   else
     IO.popen("/usr/local/bin/speedtest-cli --simple")
   end
