@@ -11,10 +11,9 @@ speedtest_result_io =
     IO.popen("/usr/local/bin/speedtest-cli --simple")
   end
 
-ping = speedtest_result_io.gets[/Ping: (\d*.+\d*) ms/, 1]
-dl = speedtest_result_io.gets[/Download: (\d*.+\d*) Mbit\/s/, 1]
-ul = speedtest_result_io.gets[/Upload: (\d*.+\d*) Mbit\/s/, 1]
-key = "123456"
+results_arr = speedtest_result_io.scan(/\d+\.?\d*/)
+abort("Speed test failed.") unless results_arr.length >= 3
+ping, dl, ul = results_arr
 
 unless ENV["SPEED_MONITOR_SECRET_KEY"].nil?
   key = ENV["SPEED_MONITOR_SECRET_KEY"]
