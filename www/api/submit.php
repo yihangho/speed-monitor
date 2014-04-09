@@ -34,5 +34,14 @@ $ping      = $mysql->escape_string(floatval($_POST["ping"]));
 $dl        = $mysql->escape_string(floatval($_POST["dl"]));
 $ul        = $mysql->escape_string(floatval($_POST["ul"]));
 
+if ($_POST["debug"] == "true") {
+	echo "Ignoring current submission...<br>";
+	echo "Timestamp: $timestamp<br>";
+	echo "Ping: $ping<br>";
+	echo "DL: $dl<br>";
+	echo "UL: $ul<br>";
+	die();
+}
+
 $mysql->query("INSERT INTO speedtest (`ts`, `ping`, `dl`, `ul`) VALUES ('$timestamp', '$ping', '$dl', '$ul')");
 ?>
