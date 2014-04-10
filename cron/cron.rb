@@ -11,7 +11,7 @@ speedtest_result_io =
     IO.popen("/usr/local/bin/speedtest-cli --simple")
   end
 
-results_arr = speedtest_result_io.scan(/\d+\.?\d*/)
+results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
 abort("Speed test failed.") unless results_arr.length >= 3
 ping, dl, ul = results_arr
 
