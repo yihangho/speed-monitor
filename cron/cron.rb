@@ -4,15 +4,30 @@ require 'openssl'
 
 ts = Time.now.to_i
 
-speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple")
-ping = speedtest_result_io.gets[/Ping: (\d*.+\d*) ms/, 1]
-dl = speedtest_result_io.gets[/Download: (\d*.+\d*) Mbit\/s/, 1]
-ul = speedtest_result_io.gets[/Upload: (\d*.+\d*) Mbit\/s/, 1]
-key = "123456"
+speedtest_result_io =
+  if ENV["SPEED_MONITOR_SERVER_ID"]
+    IO.popen("/usr/local/bin/speedtest-cli --simple --server #{ENV["SPEED_MONITOR_SERVER_ID"]}")
+  else
+    IO.popen("/usr/local/bin/speedtest-cli --simple")
+  end
+
+results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
+abort("Speed test failed.") unless results_arr.length >= 3
+ping, dl, ul = results_arr
+
+unless ENV["SPEED_MONITOR_SECRET_KEY"].nil?
+  key = ENV["SPEED_MONITOR_SECRET_KEY"]
+else
+  key = "123456"
+end
+
+unless ENV["SPEED_MONITOR_URL"].nil?
+  uri = URI(ENV["SPEED_MONITOR_URL"])
+else
+  uri = URI('https://www.example.com/speed-test/api/submit.php')
+end
 
 puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}"
-
-uri = URI('https://www.example.com/speed-test/api/submit.php')
 
 if uri.path.empty?
   uri.path = "/"
