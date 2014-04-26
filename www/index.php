@@ -1,6 +1,8 @@
 <?php
 require_once("commons/mysql.php");
 require_once("commons/config.php");
+require_once("paginator.php");
+
 
 // Get total number of rows to prepare for pagination
 $results = $mysql->query("SELECT COUNT(*) FROM speedtest");
@@ -29,6 +31,8 @@ foreach ($results_arr as $i => $row) {
 	$date->setTimeZone(new DateTimeZone("Asia/Kuala_Lumpur"));
 	$results_arr[$i]["ts"] = $date->format("d/m/y h:i A");
 }
+
+$paginator = new Paginator($current_page, $num_pages);
 ?>
 <!DOCTYPE html>
 <html>
@@ -89,50 +93,6 @@ foreach ($results_arr as $i => $row) {
 			</tbody>
 		</table>
 
-		<?php if ($num_pages > 1): ?>
-			<ul class="pagination">
-				<li<?php if ($current_page == 1): ?> class="disabled"<?php endif; ?>>
-					<?php if ($current_page != 1): ?>
-						<a href="?page=<?php echo $current_page-1; ?>">
-					<?php else: ?>
-						<span>
-					<?php endif; ?>
-						&laquo;
-					<?php if ($current_page != 1): ?>
-						</a>
-					<?php else: ?>
-						</span>
-					<?php endif; ?>
-				</li>
-				<?php for ($i = 1; $i <= $num_pages; $i++): ?>
-				<li<?php if ($i == $current_page): ?> class="active"<?php endif; ?>>
-					<?php if ($i != $current_page): ?>
-						<a href="?page=<?php echo $i; ?>">
-					<?php else: ?>
-						<span>
-					<?php endif;?>
-						<?php echo $i; ?>
-					<?php if ($i != $current_page): ?>
-						</a>
-					<?php else: ?>
-						</span>
-					<?php endif;?>
-				</li>
-				<?php endfor; ?>
-				<li<?php if ($current_page == $num_pages): ?> class="disabled"<?php endif; ?>>
-					<?php if ($current_page != $num_pages): ?>
-						<a href="?page=<?php echo $current_page+1; ?>">
-					<?php else: ?>
-						<span>
-					<?php endif; ?>
-						&raquo;
-					<?php if ($current_page != $num_pages): ?>
-						</a>
-					<?php else: ?>
-						</span>
-					<?php endif; ?>
-				</li>
-			</ul>
-		<?php endif; ?>
+		<?php echo $paginator->get_output(); ?>
 	</div>
 </body>
