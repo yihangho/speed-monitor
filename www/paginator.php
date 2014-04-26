@@ -98,11 +98,11 @@ HEREDOC;
 
 	function get_required_index() {
 		$index = [];
-		for ($i = 1; $i <= 3; $i++) {
+		for ($i = 1; $i <= 3 && $i <= $this->total_pages; $i++) {
 			$index[] = $i;
 		}
 
-		for ($i = max(4, $this->current_page - 2); $i <= $this->current_page + 2; $i++) {
+		for ($i = max(4, $this->current_page - 2); $i <= $this->current_page + 2 && $i <= $this->total_pages; $i++) {
 			$index[] = $i;
 		}
 
