@@ -20,9 +20,6 @@ if ($current_page > $num_pages) {
 $per_page     = RESULTS_PER_PAGE;
 $first_index  = ($current_page-1) * RESULTS_PER_PAGE;
 
-$results = $mysql->query("SELECT COUNT(*) FROM speedtest");
-$t = $results->fetch_all();
-
 $results = $mysql->query("SELECT * FROM speedtest ORDER BY `ts` DESC LIMIT $first_index, $per_page");
 date_default_timezone_set("UTC");
 $results_arr = $results->fetch_all(MYSQLI_ASSOC);
