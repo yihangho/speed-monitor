@@ -3,15 +3,27 @@ require 'net/http'
 require 'openssl'
 
 ts = Time.now.to_i
+if ENV["SPEED_MONITOR_SERVER_ID"]
+  servers = ENV["SPEED_MONITOR_SERVER_ID"].split(',').map { |x| x.strip }
+else
+  servers = []
+end
 
-speedtest_result_io =
-  if ENV["SPEED_MONITOR_SERVER_ID"]
-    IO.popen("/usr/local/bin/speedtest-cli --simple --server #{ENV["SPEED_MONITOR_SERVER_ID"]}")
-  else
-    IO.popen("/usr/local/bin/speedtest-cli --simple")
-  end
+servers.each do |id|
+  next if id.empty?
+  puts "Trying #{id}"
+  speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple --server #{id}")
+  results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
+  break if results_arr.length >= 3
+end
 
-results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
+if results_arr.length < 3
+  id = "auto"
+  puts "Auto"
+  speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple")
+  results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
+end
+
 abort("Speed test failed.") unless results_arr.length >= 3
 ping, dl, ul = results_arr
 
@@ -27,7 +39,7 @@ else
   uri = URI('https://www.example.com/speed-test/api/submit.php')
 end
 
-puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}"
+puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}, id: #{id}"
 
 if uri.path.empty?
   uri.path = "/"
