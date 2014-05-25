@@ -77,6 +77,7 @@ $paginator = new Paginator($current_page, $num_pages);
 				<th>Ping</th>
 				<th>DL</th>
 				<th>UL</th>
+				<th>Server</th>
 			</thead>
 			<tbody>
 				<?php foreach($results_arr as $row): ?>
@@ -85,6 +86,7 @@ $paginator = new Paginator($current_page, $num_pages);
 						<td><?php echo $row["ping"]; ?></td>
 						<td><?php echo $row["dl"]; ?></td>
 						<td><?php echo $row["ul"]; ?></td>
+						<td><?php echo ($row["server_id"] ? $row["server_id"] : "N/A"); ?></td>
 					</tr>
 				<?php endforeach; ?>
 			</tbody>
