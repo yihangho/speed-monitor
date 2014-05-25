@@ -14,11 +14,12 @@ servers.each do |id|
   puts "Trying #{id}"
   speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple --server #{id}")
   results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
+  server_id = id
   break if results_arr.length >= 3
 end
 
 if results_arr.length < 3
-  id = "auto"
+  server_id = "auto"
   puts "Auto"
   speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple")
   results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
@@ -39,7 +40,7 @@ else
   uri = URI('https://www.example.com/speed-test/api/submit.php')
 end
 
-puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}, id: #{id}"
+puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}, id: #{server_id}"
 
 if uri.path.empty?
   uri.path = "/"
