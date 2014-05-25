@@ -9,17 +9,20 @@ else
   servers = []
 end
 
+server_used = nil
+results_arr = []
+
 servers.each do |id|
   next if id.empty?
   puts "Trying #{id}"
   speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple --server #{id}")
   results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
-  server_id = id
+  server_used = id
   break if results_arr.length >= 3
 end
 
 if results_arr.length < 3
-  server_id = "auto"
+  server_used = "auto"
   puts "Auto"
   speedtest_result_io = IO.popen("/usr/local/bin/speedtest-cli --simple")
   results_arr = speedtest_result_io.read.scan(/\d+\.?\d*/)
@@ -40,7 +43,7 @@ else
   uri = URI('https://www.example.com/speed-test/api/submit.php')
 end
 
-puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}, id: #{server_id}"
+puts "Ts: #{ts}, ping: #{ping}, dl: #{dl}, ul: #{ul}, id: #{server_used}"
 
 if uri.path.empty?
   uri.path = "/"
@@ -50,7 +53,7 @@ http = Net::HTTP.new(uri.host, uri.port)
 http.use_ssl = (uri.scheme == "https")
 
 begin
-  response = http.request_post(uri.path, "timestamp=#{ts}&ping=#{ping}&dl=#{dl}&ul=#{ul}&key=#{key}")
+  response = http.request_post(uri.path, "timestamp=#{ts}&ping=#{ping}&dl=#{dl}&ul=#{ul}&key=#{key}&server=#{server_used}")
   p response
   puts response.body
 rescue Exception => e
