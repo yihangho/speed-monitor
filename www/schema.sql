@@ -5,5 +5,6 @@ CREATE TABLE IF NOT EXISTS `speedtest` (
   `dl` float NOT NULL,
   `ul` float NOT NULL,
   `server_id` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
+  PRIMARY KEY (`id`),
+  KEY `ts` (`ts`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 AUTO_INCREMENT=12 ;
